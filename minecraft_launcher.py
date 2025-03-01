@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import subprocess
 import uuid
@@ -10,8 +11,21 @@ import threading
 import time
 import zipfile
 
+# Set the Minecraft directory based on the operating system
+if sys.platform == "win32":
+    # Windows
+    MINECRAFT_DIR = os.path.join(os.getenv('APPDATA'), '.minecraft')
+elif sys.platform == "darwin":
+    # macOS
+    MINECRAFT_DIR = os.path.expanduser('~/Library/Application Support/minecraft')
+else:
+    # Linux and other platforms
+    MINECRAFT_DIR = os.path.expanduser('~/.minecraft')
+
+# Ensure the directory exists
+os.makedirs(MINECRAFT_DIR, exist_ok=True)
+
 # Constants
-MINECRAFT_DIR = os.path.join(os.getenv('APPDATA'), '.minecraft')
 VERSION_MANIFEST_URL = "https://piston-meta.mojang.com/mc/game/version_manifest.json"
 FABRIC_API_URL = "https://meta.fabricmc.net/v2/versions/loader/{version}"
 FORGE_INSTALLER_URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
